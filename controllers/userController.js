@@ -60,7 +60,7 @@ const login = async (req, res) => {
     res.json({ message: 'ログインしました。', token });
 
   } catch (error) {
-    // サーバーでエラーが発生した場合
+    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
   }
 };
@@ -104,6 +104,7 @@ const getUser = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
   }
 };
@@ -122,6 +123,7 @@ const deleteUser = async (req, res) => {
     res.status(200).json({ message: `${deletedUser.username}さんの会員情報を削除しました。`, userId: deletedUser._id ,result: true });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。', result: false });
   }
 };
@@ -158,6 +160,7 @@ const sendMail = async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。', result: false });
   }
 };
