@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+  <link rel="stylesheet" href="./css/style.css">
+  <title>集中タイマー</title>
+  <style>
+
+  </style>
+</head>
+<script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <h1>集中タイマー</h1>
+    </div>
+  </header>
+  <!-- モーダルの背景 -->
+  <div id="modal-area" class="noDisp"></div>
+  <div id="form-area">
+    <!-- ユーザー情報を表示させるボタン -->
+    <button id="user-info-button" class="noDisp">ユーザー情報</button>
+  </div>
+  <!-- ユーザー情報 -->
+  <div id="user-info-area" class="noDisp">
+    <span id="user-info-close" class="close"></span>
+    <form id="user-info-form" action="process.env.APP_URL" method="POST">
+      <input id="input-comment-area" type="text" name="comment" placeholder="例）〇〇の資格の勉強をしています！">
+      <input type="submit" value="登録">
+      <p class="comment-discription" style="font-size: small;">※表の各ユーザーをクリックすると表示されるコメントです。（タイマー開始時に更新）</p>
+    </form>
+    <div class="logoutAndDeleteWrapper">
+      <button id="logout-button">ログアウト</button>
+      <button id="delete-button">会員情報削除</button>
+    </div>
+  </div>
+
+  <div id="message-area"></div>
+  <div class="timer-container">
+    <p id="myTimer-area">--：--</p>
+    <div id="stop-alert-button" class="noDisp">ストップ</div>
+    <div class="timer-contoroller-box">
+      <select name="time" id="selection-time">
+        <option value="180">3分</option>
+        <option value="300">5分</option>
+        <option value="600">10分</option>
+        <option value="900">15分</option>
+        <option value="1200">20分</option>
+        <option value="1500">25分</option>
+        <option value="1800">30分</option>
+        <option value="2100">35分</option>
+        <option value="2400">40分</option>
+        <option value="2700">45分</option>
+        <option value="3000">50分</option>
+        <option value="3600">60分</option>
+      </select>
+      <button id="startButton">　開始　</button>
+      <button id="pauseButton">一時停止</button>
+      <button id="resumeButton">　再開　</button>
+      <button id="stopButton">　終了　</button>
+    </div>
+    <div class="audio-slider-box">
+      <div class="vol-down">
+        <img src="./img/vol_off.png" alt="minimum">
+      </div>
+      <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.3">
+      <div class="vol-up">
+        <img src="./img/vol_up.png" alt="maximum">
+      </div>
+      <button id="volume-check-button">音量確認</button>
+    </div>
+  </div>
+
+  <audio id="alert-sound" src="./bell.mp3" preload="auto"></audio>
+
+
+  <table id="timer-table">
+    <thead>
+      <tr>
+        <th>ユーザー名</th>
+        <th>残り時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- ここに行が追加される -->
+    </tbody>
+  </table>
+
+  <form id="contact-form" class="noDisp" novalidate>
+    <span id="contact-close" class="close"></span>
+    <h2>ご意見・お問い合わせ</h2>
+    <label for="name">お名前<span class="contact-error-message noDisp"></span></label>
+    <input id="name" type="text" required />
+    <label for="email">メールアドレス<span class="contact-error-message noDisp"></span></label>
+    <input id="email" placeholder="こちらのメールアドレスに返信いたします。" type="email" required />
+    <label for="message">メッセージ<span class="contact-error-message noDisp"></span></label>
+    <textarea id="message" required></textarea>
+    <button id="contact-submit" type="submit">送信</button>
+  </form>
+
+
+
+  <footer>
+    <p id="footer-contact">ご意見・お問い合わせ</p>
+    <p class="copyright">©︎2023 daishi</p>
+  </footer>
+  <script type="module" src="./js/index.js"></script>
+  <script type="module" src="./js/fetchTimer.js"></script>
+  <script type="module" src="./js/fetchUser.js"></script>
+</body>
+
+</html>
