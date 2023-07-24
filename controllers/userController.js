@@ -24,13 +24,19 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'ユーザー名とパスワードは同じものを使用できません。' });
     }
     // ユーザー名の重複チェック
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: '別のユーザー名をご使用ください。' });
-    }
-    const user = new User({ username, password });
-    await user.save();
-    const token = jwt.sign({ userId: user._id }, secret, { expiresIn: '8h' });
+    console.log('About to check for existing user');
+const existingUser = await User.findOne({ username });
+console.log('Checked for existing user', existingUser);
+
+console.log('About to create new user');
+const user = new User({ username, password });
+await user.save();
+console.log('Created new user', user);
+
+console.log('About to sign token');
+const token = jwt.sign({ userId: user._id }, secret, { expiresIn: '8h' });
+console.log('Signed token', token);
+
     res.status(201).json({ message: '会員登録しました', token });
 
   } catch (error) {
