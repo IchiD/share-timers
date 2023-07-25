@@ -425,6 +425,12 @@ button:active {
   outline: none;
 }
 
+#contact-form #name.error,
+#contact-form #email.error,
+#contact-form #message.error {
+  border: 1px solid red !important;
+}
+
 #contact-form textarea {
   resize: none;
   height: 120px;

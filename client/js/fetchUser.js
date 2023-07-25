@@ -1,10 +1,5 @@
 import { setMessages, checkLoginStatus } from './index.js';
 
-const nameErrorMessageElement = document.querySelector('label[for="name"] .contact-error-message');
-const emailErrorMessageElement = document.querySelector('label[for="email"] .contact-error-message');
-const messageErrorMessageElement = document.querySelector('label[for="message"] .contact-error-message');
-
-
 async function authenticateUser(url, username, password) {
   let data = null;
   try {
@@ -116,7 +111,6 @@ async function addComment() {
 async function deleteUser() {
   let data;
   try {
-    // throw new Error('テスト');
     const { token, userId } = getTokenAndUserId();
     const response = await fetch(`api/users/delete/${userId}`, {
       method: 'DELETE',
@@ -153,28 +147,6 @@ async function sendMail(name, email, message) {
       body: JSON.stringify({ name: name, email: email, message: message }),
     })
     const data = await response.json();
-    if (!response.ok) {
-      switch (data.path) {
-        case 'name':
-          emailErrorMessageElement.classList.add('noDisp');
-          messageErrorMessageElement.classList.add('noDisp');
-          nameErrorMessageElement.classList.remove('noDisp');
-          nameErrorMessageElement.textContent = data.message;
-          return null;
-        case 'email':
-          nameErrorMessageElement.classList.add('noDisp');
-          messageErrorMessageElement.classList.add('noDisp');
-          emailErrorMessageElement.classList.remove('noDisp');
-          emailErrorMessageElement.textContent = data.message;
-          return null;
-        case 'message':
-          nameErrorMessageElement.classList.add('noDisp');
-          emailErrorMessageElement.classList.add('noDisp');
-          messageErrorMessageElement.classList.remove('noDisp');
-          messageErrorMessageElement.textContent = data.message;
-          return null;
-      }
-    }
     return data;
 
   } catch (error) {
@@ -182,9 +154,5 @@ async function sendMail(name, email, message) {
     return null;
   }
 };
-
-// function handleErrorMessageElement() {
-  
-// }
 
 export { getTokenAndUserId, authenticateUser, deleteUser, addComment, getUser, sendMail };
