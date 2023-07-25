@@ -130,7 +130,7 @@ function setFooterEventListener() {
       const name = document.getElementById('name');
       const email = document.getElementById('email');
       const message = document.getElementById('message');
-      if (name.value.length === 0) {
+      if (name.value.trim().length === 0) {
         handleFormError({ path: 'name', message: 'お名前を入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
@@ -138,11 +138,11 @@ function setFooterEventListener() {
         handleFormError({ path: 'name', message: 'お名前は30文字以内で入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
-      if (email.value.length === 0) {
+      if (email.value.trim().length === 0) {
         handleFormError({ path: 'email', message: 'メールアドレスを入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
-      if (message.value.length === 0 || message.value === ' ') {
+      if (message.value.trim().length === 0) {
         handleFormError({ path: 'message', message: 'メッセージを入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
