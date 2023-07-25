@@ -142,7 +142,7 @@ function setFooterEventListener() {
         handleFormError({ path: 'email', message: 'メールアドレスを入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
-      if (message.value.length === 0) {
+      if (message.value.length === 0 || message.value === ' ') {
         handleFormError({ path: 'message', message: 'メッセージを入力してください。' });
         return setMessages('送信できませんでした。', 'error');
       }
