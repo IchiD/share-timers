@@ -6,7 +6,7 @@
 - Visual Studio Code：1.80.1
 - URL：[集中タイマー](https://share-timers-a181bd44c5a1.herokuapp.com/) 
 
-### ライブラリ
+## ライブラリ
 
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs)：パスワードハッシュ化用
 - [dotenv](https://www.npmjs.com/package/dotenv)：環境変数の管理
@@ -47,8 +47,13 @@
 - [Express.js公式ドキュメンテーション](https://expressjs.com/)
 - [Mongoose公式ドキュメンテーション](https://mongoosejs.com/)
 - [Socket.IO公式ドキュメンテーション](https://socket.io/)
+### Udemy
 - [【JS】ガチで学びたい人のためのJavaScriptメカニズム
 ](https://www.udemy.com/course/javascript-essence/)
 - [Node.jsで学ぶWebシステムとソフトウェア開発基礎！Node.js完全入門ガイド](https://www.udemy.com/course/nodejs-comp-guide/)
-
+### 書籍
 - [独習JavaScript 新版](https://www.amazon.co.jp/%E7%8B%AC%E7%BF%92JavaScript-%E6%96%B0%E7%89%88-CodeMafia-%E5%A4%96%E6%9D%91-%E5%B0%86%E5%A4%A7/dp/479816027X)
+
+<!-- プレビュー　［Shift］＋［Command］＋［V］ -->
+
+[test](./readmeImg/test.png)
