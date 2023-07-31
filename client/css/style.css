@@ -6,18 +6,25 @@
   padding: 0;
 }
 
-/* メインカラーの変数 */
+/* === メインカラーの変数 ============================== */
 :root {
   --main-color: #2ea4d9;
   --secondry-color: #45fdf7b3;
   --background-color: #f0f0f0;
 }
 
+/* === 共通スタイル ============================== */
 body {
   background-color: var(--background-color);
   color: #333;
   margin: 100px 0 100px 0;
   padding: 0;
+  font-family: "Helvetica Neue",
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
 }
 
 p,
@@ -25,14 +32,6 @@ select,
 button,
 input {
   font-size: 1rem;
-}
-
-#myTimer-area {
-  font-size: 5rem;
-  color: #032492;
-  text-align: center;
-  letter-spacing: 0.3rem;
-  font-family: Rockwell, sans-serif;
 }
 
 button,
@@ -43,7 +42,6 @@ select {
   background-color: var(--main-color);
   color: #fff;
   cursor: pointer;
-  /* font-size: 1rem; */
   height: 40px;
 }
 
@@ -51,6 +49,7 @@ select {
   width: 25%;
 }
 
+/* === 会員登録・ログインフォーム ======================== */
 #form-area {
   display: flex;
   justify-content: space-around;
@@ -103,7 +102,8 @@ button:active {
   width: 240px;
 }
 
-.user-info {
+/* === ユーザー情報 ============================== */
+#user-info {
   background: #ccc;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
   flex-direction: column;
@@ -119,11 +119,18 @@ button:active {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: rgb(255, 255, 255);
+  background: #fff;
   max-width: 600px;
   margin: 0 auto;
   border-radius: 4px;
   border: 1px solid #ccc;
+}
+
+#user-info-form p {
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+  color: #333;
+  font-size: small;
 }
 
 #user-info-form input[type="text"] {
@@ -162,13 +169,7 @@ button:active {
   transform: scale(0.95);
 }
 
-.comment-discription {
-  margin: 0.5rem 0;
-  font-size: 0.8rem;
-  color: #333;
-}
-
-.logoutAndDeleteWrapper {
+#user-info .buttonWrapper {
   display: flex;
   justify-content: space-around;
 }
@@ -187,15 +188,14 @@ button:active {
 }
 
 #logout-button {
-  /* 祖父要素が80％親要素が50% */
   width: calc(0.8*0.5*100%);
 }
 
 #delete-button {
-  background: rgba(255, 0, 0, 0.782);
+  background: #ff0000c7;
 }
 
-
+/* === メッセージエリア ============================== */
 #message-area {
   color: rgb(14, 8, 8);
   font-weight: bold;
@@ -216,6 +216,16 @@ button:active {
 #message-area.error {
   background-color: #ffc6c6;
   border: 1px solid #ff0000;
+}
+
+/* === タイマーの表示・操作・設定のエリア ============================== */
+
+#myTimer-area {
+  font-size: 5rem;
+  color: #032492;
+  text-align: center;
+  letter-spacing: 0.3rem;
+  font-family: Rockwell, sans-serif;
 }
 
 .timer-container {
@@ -247,14 +257,12 @@ button:active {
 
 #stopButton {
   background-color: #ff0000;
-  /* width: 80px; */
 }
 
 .audio-slider-box {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  /* flex-direction: row; */
 }
 
 .vol-down,
@@ -278,7 +286,6 @@ button:active {
   display: block;
   margin: 0 10px;
   color: var(--main-color);
-  /* font-weight: bold; */
   border: 1px solid var(--main-color);
   background-color: var(--background-color);
 }
@@ -288,19 +295,21 @@ button:active {
   color: var(--background-color);
 }
 
+/* === アラートを止めるボタン ============================ */
+
 #stop-alert-button {
   width: 90%;
   border: red solid 1px;
   padding: 5px;
   margin: 8px auto;
-  color: white;
-  background-color: rgb(255, 122, 20);
+  color: #fff;
+  background-color: #ff7a14;
   font-weight: bold;
   cursor: pointer;
   text-align: center;
 }
 
-
+/* === タイマー一覧表 ============================ */
 #timer-table {
   width: 100%;
   max-width: 600px;
@@ -345,7 +354,7 @@ button:active {
   transform: rotate(45deg) translateY(-9px);
 }
 
-/* 閉じるバツのスタイル */
+/* === 閉じるバツのスタイル ============================== */
 .close {
   position: absolute;
   top: 8px;
@@ -370,10 +379,8 @@ button:active {
 .close::after {
   content: "";
   display: block;
-  width: 95%;
-  /*バツ線の長さ*/
-  height: 3px;
-  /*バツ線の太さ*/
+  width: 95%; /*バツ線の長さ*/
+  height: 3px;  /*バツ線の太さ*/
   background: #000;
   transform: rotate(45deg);
   transform-origin: 0% 50%;
@@ -397,7 +404,6 @@ button:active {
 /* === コンタクトフォーム ============================== */
 #contact-form {
   display: flex;
-  /* display: none; */
   flex-direction: column;
   position: fixed;
   top: 50%;
@@ -495,7 +501,7 @@ button:active {
   background-color: #959595;
 }
 
-/* === ヘッダー ============================== */
+/* === ヘッダー ================================= */
 header {
   height: 80px;
   width: 100%;
@@ -530,7 +536,7 @@ header {
   letter-spacing: 0.5rem;
 }
 
-/* === フッター ============================== */
+/* === フッター ==================================== */
 footer {
   display: flex;
   justify-content: center;
@@ -543,22 +549,6 @@ footer {
   text-align: center;
   align-items: center;
   flex-direction: row;
-}
-
-@media screen and (max-width: 600px) {
-
-  .user-info {
-    width: 95%;
-  }
-
-  #contact-form {
-    width: 90%;
-  }
-
-  footer {
-    height: auto;
-    flex-direction: column;
-  }
 }
 
 #footer-contact,
@@ -657,8 +647,24 @@ footer {
   border: 1px solid lightblue;
 }
 
+/* === メディアスクリーン =============================== */
 
-/* スマホ用スタイル */
+@media screen and (max-width: 600px) {
+  
+  .user-info {
+    width: 95%;
+  }
+  
+  #contact-form {
+    width: 90%;
+  }
+  
+  footer {
+    height: auto;
+    flex-direction: column;
+  }
+}
+
 @media screen and (max-width: 480px) {
   #form-area {
     flex-direction: column;

@@ -8,7 +8,7 @@ const myTimerArea = document.getElementById('myTimer-area');
 const logoutButton = document.getElementById('logout-button');
 const deleteButton = document.getElementById('delete-button');
 const userInfoButton = document.getElementById('user-info-button');
-const userInfoArea = document.getElementById('user-info-area');
+const userInfoArea = document.getElementById('user-info');
 const userInfoClose = document.getElementById('user-info-close');
 const contactClose = document.getElementById('contact-close');
 const modalArea = document.getElementById('modal-area');
@@ -245,9 +245,7 @@ window.addEventListener('visibilitychange', function (event) {
 
 
 function setupDOMElements() {
-  // userId = getTokenAndUserId().userId;
   logoutButton.addEventListener('click', async () => {
-    // const userId = getTokenAndUserId().userId;
 
     if (checkLoginStatus()) {
       const user = await getUser(userId);
@@ -324,7 +322,7 @@ function setupDOMElements() {
     if (checkLoginStatus()) {
       if (userInfoArea.classList.contains('noDisp')) {
         userInfoButton.classList.add('noDisp');
-        userInfoArea.className = 'fadeIn user-info';
+        userInfoArea.className = 'fadeIn';
         modalArea.className = 'modalBg fadeIn';
       }
     } else {
@@ -337,8 +335,8 @@ function setupDOMElements() {
   });
   // ユーザー情報を閉じるボタン
   userInfoClose.addEventListener('click', function () {
-    if (userInfoArea.classList.contains('user-info')) {
-      userInfoArea.className = 'fadeOut user-info noDisp';
+    if (!userInfoArea.classList.contains('noDisp')) {
+      userInfoArea.className = 'fadeOut noDisp';
       modalArea.className = 'modalBg fadeOut';
       userInfoButton.classList.remove('noDisp');
     }
