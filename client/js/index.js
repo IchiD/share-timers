@@ -1,6 +1,7 @@
 import { loadTimers, startButton, pauseButton, resumeButton, stopButton, stopTimer } from './fetchTimer.js';
 import { createRegisterForm } from './register.js';
 import { createLoginForm } from './login.js';
+import { createDeleteConfirmForm } from './deleteConfirm.js';
 import { getTokenAndUserId, addComment, getUser, deleteUser, sendMail } from './fetchUser.js';
 
 const socket = io();
@@ -272,9 +273,18 @@ function setupDOMElements() {
     }
   });
 
+  // 会員情報削除のボタンを押したとき
   deleteButton.addEventListener('click', async (event) => {
     event.preventDefault();
     if (checkLoginStatus()) {
+      modalArea.className = 'modalBg fadeIn';
+      userInfoArea.classList.add('noDisp');
+      const result = await createDeleteConfirmForm();
+      // resultがtrueなら削除実行
+      if (!result) {
+        userInfoArea.classList.remove('noDisp');
+        return;
+      }
       try {
         const data = await deleteUser();
         if (data && data.result) { // ユーザー削除成功

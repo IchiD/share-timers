@@ -9,7 +9,63 @@
   <link rel="stylesheet" href="./css/style.css">
   <title>集中タイマー</title>
   <style>
+    #delete-confirm {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      width: 80%;
+      min-width: 350px;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px #00000033;
+      text-align: center;
+      z-index: 100;
+    }
 
+    #delete-confirm-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    #delete-confirm h2 {
+      margin-bottom: 20px;
+    }
+
+    #delete-confirm p {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #ff0000c7;
+    }
+
+
+    #delete-confirm .buttonWrapper {
+      height: auto;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+
+    #delete-confirm-button {
+      background-color: #ff0000c7;
+    }
+    #delete-cancel-button {
+      background-color: #333;
+    }
+
+    #delete-confirm button:active {
+      transform: scale(0.98);
+    }
+
+    #delete-confirm button:focus {
+      outline: none;
+    }
   </style>
 </head>
 <script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
@@ -58,6 +114,7 @@
         <option value="2400">40分</option>
         <option value="2700">45分</option>
         <option value="3000">50分</option>
+        <option value="3300">55分</option>
         <option value="3600">60分</option>
       </select>
       <button id="startButton">　開始　</button>
@@ -104,6 +161,8 @@
     <button id="contact-submit" type="submit">送信</button>
   </form>
 
+  <!-- ユーザー情報を本当に削除しますか？の確認モーダル表示エリア -->
+  <div id="delete-confirm-area"></div>
 
 
   <footer>

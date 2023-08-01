@@ -42,7 +42,7 @@
 
 - **プログラミング言語**：JavaScript
 - **フロントエンド**：Vanilla JavaScript
-- **バックエンド**：Express.js
+- **バックエンド**：node.js Express
 - **データベース**：MongoDB
 - **ORM**：Mongoose
 - **リアルタイム通信**：Socket.io
