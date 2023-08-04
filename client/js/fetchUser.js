@@ -84,7 +84,7 @@ async function updateName() {
     const usernameAfter = userInfoName.value.trim();
     if (usernameAfter === "") {
       const data = {};
-      data.message = 'aaaユーザー名を入力してください。';
+      data.message = 'ユーザー名を入力してください。';
       return data;
     }
     if (usernameAfter === usernameBefore) {
