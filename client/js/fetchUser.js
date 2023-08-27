@@ -1,4 +1,4 @@
-import { setMessages, checkLoginStatus } from './index.js';
+import { setMessages, checkLoginStatus, userInfoName } from './index.js';
 
 async function authenticateUser(url, username, password) {
   let data = null;
@@ -72,6 +72,51 @@ async function getUser(userId) {
       return null;
     }
 
+  }
+}
+
+// ユーザー名を変更する
+async function updateName() {
+  try {
+    const { token, userId } = getTokenAndUserId();
+    const userInfo = await getUser(userId);
+    const usernameBefore = userInfo.name;
+    const usernameAfter = userInfoName.value.trim();
+    if (usernameAfter === "") {
+      const data = {};
+      data.message = 'ユーザー名を入力してください。';
+      return data;
+    }
+    if (usernameAfter === usernameBefore) {
+      const data = {};
+      data.status = 'notChanged';
+      return data;
+    }
+    if (usernameAfter.length > 10) {
+      const data = {};
+      data.message = 'ユーザー名は10文字以内で入力してください。';
+      return data;
+    }
+    if (usernameAfter.match(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/)) {
+      const data = {};
+      data.message = 'ユーザー名にURLは使用できません。';
+      return data;
+    }
+
+    const response = await fetch(`/api/users/updateName/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ username: usernameAfter })
+    });
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    setMessages('aサーバーに接続できませんでした。時間を置いてもう一度お試しください。', 'error');
   }
 }
 
@@ -155,4 +200,4 @@ async function sendMail(name, email, message) {
   }
 };
 
-export { getTokenAndUserId, authenticateUser, deleteUser, addComment, getUser, sendMail };
+export { getTokenAndUserId, authenticateUser, updateName, deleteUser, addComment, getUser, sendMail };

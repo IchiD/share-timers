@@ -8,9 +8,6 @@
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
   <link rel="stylesheet" href="./css/style.css">
   <title>集中タイマー</title>
-  <style>
-
-  </style>
 </head>
 <script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
 </head>
@@ -22,22 +19,26 @@
     </div>
   </header>
   <!-- モーダルの背景 -->
-  <div id="modal-area" class="noDisp"></div>
+  <div id="modal-area" class="modalBg noDisp"></div>
   <div id="form-area">
     <!-- ユーザー情報を表示させるボタン -->
     <button id="user-info-button" class="noDisp">ユーザー情報</button>
   </div>
   <!-- ユーザー情報 -->
-  <div id="user-info-area" class="noDisp">
+  <div id="user-info" class="noDisp">
     <span id="user-info-close" class="close"></span>
+    <div id="user-info-name-area">
+      <input id="user-info-name"></input>
+      <button id="update-name-button">変更</button>
+    </div>
     <form id="user-info-form" action="process.env.APP_URL" method="POST">
       <input id="input-comment-area" type="text" name="comment" placeholder="例）〇〇の資格の勉強をしています！">
       <input type="submit" value="登録">
-      <p class="comment-discription" style="font-size: small;">※表の各ユーザーをクリックすると表示されるコメントです。（タイマー開始時に更新）</p>
+      <p>※表の各ユーザーをクリックすると表示されるコメントです。（タイマー開始時に更新）</p>
     </form>
-    <div class="logoutAndDeleteWrapper">
+    <div class="button-wrapper">
       <button id="logout-button">ログアウト</button>
-      <button id="delete-button">会員情報削除</button>
+      <button id="delete-button">ユーザー情報削除</button>
     </div>
   </div>
 
@@ -58,6 +59,7 @@
         <option value="2400">40分</option>
         <option value="2700">45分</option>
         <option value="3000">50分</option>
+        <option value="3300">55分</option>
         <option value="3600">60分</option>
       </select>
       <button id="startButton">　開始　</button>
@@ -104,6 +106,8 @@
     <button id="contact-submit" type="submit">送信</button>
   </form>
 
+  <!-- ユーザー情報を本当に削除しますか？の確認モーダル表示エリア -->
+  <div id="delete-confirm-area"></div>
 
 
   <footer>
