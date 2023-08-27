@@ -68,8 +68,7 @@ select {
 #register-form input[type="text"],
 #login-form input[type="text"],
 #register-form input[type="password"],
-#login-form input[type="password"]
- {
+#login-form input[type="password"] {
   width: 240px;
   padding: 0.6rem;
   margin: 0.2rem 0;
@@ -157,6 +156,34 @@ button:active {
   text-align: center;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+}
+
+#user-info-name-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#user-info-name {
+  width: 240px;
+  padding: 0.7em 1em;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  background-color: #fff;
+}
+
+#user-info-name:focus {
+  outline: none;
+}
+
+#update-name-button {
+  padding: 0.5em 1em;
+  border-radius: 0 4px 4px 0;
+  border: none;
+  /* background-color: var(--main-color); */
   cursor: pointer;
 }
 
@@ -248,6 +275,7 @@ button:active {
 #delete-confirm-button {
   background-color: #ff0000c7;
 }
+
 #delete-cancel-button {
   background-color: #333;
 }
@@ -444,8 +472,10 @@ button:active {
 .close::after {
   content: "";
   display: block;
-  width: 95%; /*バツ線の長さ*/
-  height: 3px;  /*バツ線の太さ*/
+  width: 95%;
+  /*バツ線の長さ*/
+  height: 3px;
+  /*バツ線の太さ*/
   background: #000;
   transform: rotate(45deg);
   transform-origin: 0% 50%;
@@ -709,15 +739,15 @@ footer {
 /* === メディアスクリーン =============================== */
 
 @media screen and (max-width: 600px) {
-  
+
   .user-info {
     width: 95%;
   }
-  
+
   #contact-form {
     width: 90%;
   }
-  
+
   footer {
     height: auto;
     flex-direction: column;
