@@ -34,7 +34,6 @@ const register = async (req, res) => {
     res.status(201).json({ message: '会員登録しました', token });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
   }
 };
@@ -60,7 +59,7 @@ const login = async (req, res) => {
     res.json({ message: 'ログインしました。', token });
 
   } catch (error) {
-    console.error(error);
+    // サーバーでエラーが発生した場合
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
   }
 };
@@ -91,50 +90,6 @@ const addComment = async (req, res) => {
   }
 };
 
-// ユーザー名変更
-const updateName = async (req, res) => {
-  console.log(req.body);
-  try {
-    const { id: _id } = req.params;
-    let { username } = req.body;
-    if (_id !== req.userId) {
-      return res.status(401).json({ message: '認証に失敗しました。' });
-    }
-
-    // エスケープ処理
-    username = escapeHtml(username);
-    // ユーザー名が変更されていない場合
-    const user = await User.findById({ _id });
-    const userNameBefore = user.username;
-    const userPassword = user.password;
-    if (userNameBefore === username) {
-      return res.status(400).json({ status: 'notChanged' });
-    }
-    const isUsernameSameAsPassword = await bcrypt.compare(username, userPassword);
-    if (isUsernameSameAsPassword) {
-      return res.status(400).json({ message: 'ユーザー名とパスワードが一致しています。ユーザー名とパスワードは異なるものを設定してください。' });
-    }
-    // ユーザー名の重複チェック
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: '別のユーザー名をご使用ください。' });
-    }
-
-    // ユーザー名だけを更新
-    const updatedUser = await User.findByIdAndUpdate(_id, { username: username }, { new: true });
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'ユーザーが見つかりませんでした。ログインし直してください。' });
-    }
-
-    res.status(200).json({ message: 'ユーザー名を変更しました。', username: updatedUser.username });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
-  }
-};
-
 // ユーザー情報の取得
 const getUser = async (req, res) => {
   try {
@@ -148,7 +103,6 @@ const getUser = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。' });
   }
 };
@@ -164,10 +118,9 @@ const deleteUser = async (req, res) => {
     if (!deletedUser) {
       return res.status(404).json({ message: 'ユーザーが見つかりませんでした。ログインし直してください。', result: false });
     }
-    res.status(200).json({ message: `${deletedUser.username}さんの会員情報を削除しました。`, userId: deletedUser._id, result: true });
+    res.status(200).json({ message: `${deletedUser.username}さんの会員情報を削除しました。`, userId: deletedUser._id ,result: true });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。', result: false });
   }
 };
@@ -194,7 +147,7 @@ const sendMail = async (req, res) => {
         pass: process.env.EMAIL_ADDRESS_PASSWORD
       }
     });
-
+    
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -204,7 +157,6 @@ const sendMail = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'サーバーで問題が発生しました。時間を置いてもう一度お試しください。', result: false });
   }
 };
@@ -212,4 +164,4 @@ const sendMail = async (req, res) => {
 
 
 
-export default { register, login, updateName, deleteUser, addComment, getUser, sendMail };
+export default { register, login, deleteUser, addComment, getUser, sendMail };

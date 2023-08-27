@@ -1,4 +1,9 @@
-import { setMessages, checkLoginStatus, userInfoName } from './index.js';
+import { setMessages, checkLoginStatus } from './index.js';
+
+const nameErrorMessageElement = document.querySelector('label[for="name"] .contact-error-message');
+const emailErrorMessageElement = document.querySelector('label[for="email"] .contact-error-message');
+const messageErrorMessageElement = document.querySelector('label[for="message"] .contact-error-message');
+
 
 async function authenticateUser(url, username, password) {
   let data = null;
@@ -75,51 +80,6 @@ async function getUser(userId) {
   }
 }
 
-// ユーザー名を変更する
-async function updateName() {
-  try {
-    const { token, userId } = getTokenAndUserId();
-    const userInfo = await getUser(userId);
-    const usernameBefore = userInfo.name;
-    const usernameAfter = userInfoName.value.trim();
-    if (usernameAfter === "") {
-      const data = {};
-      data.message = 'ユーザー名を入力してください。';
-      return data;
-    }
-    if (usernameAfter === usernameBefore) {
-      const data = {};
-      data.status = 'notChanged';
-      return data;
-    }
-    if (usernameAfter.length > 10) {
-      const data = {};
-      data.message = 'ユーザー名は10文字以内で入力してください。';
-      return data;
-    }
-    if (usernameAfter.match(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/)) {
-      const data = {};
-      data.message = 'ユーザー名にURLは使用できません。';
-      return data;
-    }
-
-    const response = await fetch(`/api/users/updateName/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ username: usernameAfter })
-    });
-
-    const data = await response.json();
-    return data;
-
-  } catch (error) {
-    setMessages('aサーバーに接続できませんでした。時間を置いてもう一度お試しください。', 'error');
-  }
-}
-
 // ユーザーのコメントを取得して変更がなかったら何もしない、変更があったら更新する。
 async function addComment() {
   try {
@@ -156,6 +116,7 @@ async function addComment() {
 async function deleteUser() {
   let data;
   try {
+    // throw new Error('テスト');
     const { token, userId } = getTokenAndUserId();
     const response = await fetch(`api/users/delete/${userId}`, {
       method: 'DELETE',
@@ -192,6 +153,28 @@ async function sendMail(name, email, message) {
       body: JSON.stringify({ name: name, email: email, message: message }),
     })
     const data = await response.json();
+    if (!response.ok) {
+      switch (data.path) {
+        case 'name':
+          emailErrorMessageElement.classList.add('noDisp');
+          messageErrorMessageElement.classList.add('noDisp');
+          nameErrorMessageElement.classList.remove('noDisp');
+          nameErrorMessageElement.textContent = data.message;
+          return null;
+        case 'email':
+          nameErrorMessageElement.classList.add('noDisp');
+          messageErrorMessageElement.classList.add('noDisp');
+          emailErrorMessageElement.classList.remove('noDisp');
+          emailErrorMessageElement.textContent = data.message;
+          return null;
+        case 'message':
+          nameErrorMessageElement.classList.add('noDisp');
+          emailErrorMessageElement.classList.add('noDisp');
+          messageErrorMessageElement.classList.remove('noDisp');
+          messageErrorMessageElement.textContent = data.message;
+          return null;
+      }
+    }
     return data;
 
   } catch (error) {
@@ -200,4 +183,8 @@ async function sendMail(name, email, message) {
   }
 };
 
-export { getTokenAndUserId, authenticateUser, updateName, deleteUser, addComment, getUser, sendMail };
+// function handleErrorMessageElement() {
+  
+// }
+
+export { getTokenAndUserId, authenticateUser, deleteUser, addComment, getUser, sendMail };

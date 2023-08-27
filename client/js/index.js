@@ -1,17 +1,14 @@
 import { loadTimers, startButton, pauseButton, resumeButton, stopButton, stopTimer } from './fetchTimer.js';
 import { createRegisterForm } from './register.js';
 import { createLoginForm } from './login.js';
-import { createDeleteConfirmForm } from './deleteConfirm.js';
-import { getTokenAndUserId, updateName, addComment, getUser, deleteUser, sendMail } from './fetchUser.js';
+import { getTokenAndUserId, addComment, getUser, deleteUser, sendMail } from './fetchUser.js';
 
 const socket = io();
-const userInfoName = document.getElementById('user-info-name');
-const updateNameButton = document.getElementById('update-name-button');
 const myTimerArea = document.getElementById('myTimer-area');
 const logoutButton = document.getElementById('logout-button');
 const deleteButton = document.getElementById('delete-button');
 const userInfoButton = document.getElementById('user-info-button');
-const userInfoArea = document.getElementById('user-info');
+const userInfoArea = document.getElementById('user-info-area');
 const userInfoClose = document.getElementById('user-info-close');
 const contactClose = document.getElementById('contact-close');
 const modalArea = document.getElementById('modal-area');
@@ -22,16 +19,6 @@ const audioElement = document.getElementById('alert-sound');
 const volumeCheckButton = document.getElementById('volume-check-button');
 const stopAlertButton = document.getElementById('stop-alert-button');
 const contactForm = document.getElementById('contact-form');
-const errorMessageElements = {
-  name: document.querySelector('label[for="name"] .contact-error-message'),
-  email: document.querySelector('label[for="email"] .contact-error-message'),
-  message: document.querySelector('label[for="message"] .contact-error-message'),
-}
-const MessageInputElements = {
-  name: document.getElementById('name'),
-  email: document.getElementById('email'),
-  message: document.getElementById('message'),
-};
 const contactSubmitButton = document.getElementById('contact-submit');
 const footerContact = document.getElementById('footer-contact');
 
@@ -46,7 +33,7 @@ timerSelectionElement.value = TIMER_DEFAULT;
 
 // エスケープされたHTMLをデコードする関数
 function decodeHtmlEntities(encodedText) {
-  if (!encodedText) {
+  if(!encodedText) {
     return '';
   }
   let div = document.createElement('div');
@@ -57,8 +44,9 @@ function decodeHtmlEntities(encodedText) {
 
 function headerScroll() {
   const header = document.querySelector('header');
+  const headerHeight = header.clientHeight;
   const scrollY = window.scrollY;
-  if (scrollY > 30) {
+  if(scrollY > 30) {
     header.classList.add('fadeOut');
     header.classList.remove('fadeIn');
   } else {
@@ -76,11 +64,11 @@ volumeSlider.addEventListener('input', function () {
 });
 
 volumeCheckButton.addEventListener('click', function () {
-  if (audioElement.paused) {
+  if (audioElement.paused) { 
     audioElement.play();
-    this.textContent = "　停止　";
-  } else {
-    audioElement.pause();
+    this.textContent = "　停止　"; 
+  } else { 
+    audioElement.pause(); 
     audioElement.currentTime = 0; // 再生位置を先頭に戻す
     this.textContent = "音量確認";
   }
@@ -108,17 +96,17 @@ async function getUserInfo() {
 
 
 function setFooterEventListener() {
-  footerContact.addEventListener('click', function () {
-    if (contactForm.classList.contains('noDisp')) {
+  footerContact.addEventListener('click', function() {
+    if(contactForm.classList.contains('noDisp')) {
       contactForm.classList.remove('noDisp');
       modalArea.className = 'modalBg fadeIn';
     }
 
-
+    
   });
 
-  contactClose.addEventListener('click', function () {
-    if (!contactForm.classList.contains('noDisp')) {
+  contactClose.addEventListener('click', function() {
+    if(!contactForm.classList.contains('noDisp')) {
       contactForm.classList.add('noDisp');
       modalArea.className = 'modalBg fadeOut';
     }
@@ -126,83 +114,37 @@ function setFooterEventListener() {
 
   //  お問い合わせフォーム
   contactForm.addEventListener('submit', async (event) => {
-
     try {
       event.preventDefault();
-      const name = document.getElementById('name');
-      const email = document.getElementById('email');
-      const message = document.getElementById('message');
-      if (name.value.trim().length === 0) {
-        handleFormError({ path: 'name', message: 'お名前を入力してください。' });
-        return setMessages('送信できませんでした。', 'error');
-      }
-      if (name.value.length > 30) {
-        handleFormError({ path: 'name', message: 'お名前は30文字以内で入力してください。' });
-        return setMessages('送信できませんでした。', 'error');
-      }
-      if (email.value.trim().length === 0) {
-        handleFormError({ path: 'email', message: 'メールアドレスを入力してください。' });
-        return setMessages('送信できませんでした。', 'error');
-      }
-      if (message.value.trim().length === 0) {
-        handleFormError({ path: 'message', message: 'メッセージを入力してください。' });
-        return setMessages('送信できませんでした。', 'error');
-      }
-      if (message.value.length > 300) {
-        handleFormError({ path: 'message', message: 'メッセージは300字以内で入力してください。' });
-        return setMessages('送信できませんでした。', 'error');
-      }
-      disableContactSubmitButton('送信中...', true);
-      const data = await sendMail(name.value, email.value, message.value);
-      if (data && data.result) {
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+      var message = document.getElementById('message').value;
+      contactSubmitButton.disabled = true;
+      contactSubmitButton.textContent = '送信中...';
+      const  data = await sendMail(name, email, message);
+      if(data && data.result) {
         contactForm.classList.add('noDisp');
         modalArea.className = 'modalBg fadeOut';
         document.getElementById('name').value = '';
         document.getElementById('email').value = '';
         document.getElementById('message').value = '';
         setMessages(data.message, 'success');
-        errorMessageElements['name'].classList.add('noDisp');
-        errorMessageElements['email'].classList.add('noDisp');
-        errorMessageElements['message'].classList.add('noDisp');
-        MessageInputElements['name'].classList.remove('error');
-        MessageInputElements['email'].classList.remove('error');
-        MessageInputElements['message'].classList.remove('error');
       } else if (data && !data.result) {
-        setMessages('送信できませんでした。', 'error');
-        handleFormError(data);
-      } else if (data === null) {
+        setMessages(data.message, 'error');
+      } else if( data === null) {
         setMessages('送信できませんでした。', 'error');
       } else {
         setMessages('システムエラーが発生しました。時間を置いてもう一度お試しください。', 'error');
       }
-      disableContactSubmitButton('送信', false);
+      contactSubmitButton.textContent = '送信';
+      contactSubmitButton.disabled = false;
     } catch (error) {
       setMessages(error.message, 'error');
-      disableContactSubmitButton('送信', false);
+      contactSubmitButton.textContent = '送信';
+      contactSubmitButton.disabled = false;
     }
   });
-}
 
-// お問い合わせフォームの送信ボタンのテキストとdisabledを変更
-function disableContactSubmitButton(text, disabled) {
-  contactSubmitButton.textContent = text;
-  contactSubmitButton.disabled = disabled;
-}
-
-// お問い合わせフォームのバリデーションエラーを表示
-function handleFormError(data) {
-  console.log(data);
-  for (let key in errorMessageElements) {
-    console.log(key)
-    if (data.path === key) {
-      MessageInputElements[key].classList.add('error');
-      errorMessageElements[key].classList.remove('noDisp');
-      errorMessageElements[key].textContent = data.message;
-    } else {
-      MessageInputElements[key].classList.remove('error');
-      errorMessageElements[key].classList.add('noDisp');
-    }
-  }
 }
 
 
@@ -247,34 +189,11 @@ window.addEventListener('visibilitychange', function (event) {
   }
 });
 
+
 function setupDOMElements() {
-
-  // ユーザー名変更ボタン
-  updateNameButton.addEventListener('click', async () => {
-    if (checkLoginStatus()) {
-      try {
-        const data = await updateName(); 
-        if (data.status === 'notChanged') return;
-        if (data.username) {
-          userName = data.username;
-          setMessages(data.message, 'success');
-          modalArea.className = 'modalBg fadeOut';
-          userInfoArea.classList.add('noDisp');
-          userInfoButton.classList.remove('noDisp');
-        } else {
-          setMessages(data.message, 'error');
-          modalArea.className = 'modalBg fadeOut';
-          userInfoArea.classList.add('noDisp');
-          userInfoButton.classList.remove('noDisp');
-          userInfoName.value = userName;
-        }
-        } catch (error) {
-          setMessages('サーバーに接続できませんでした。時間を置いてもう一度お試しください。', 'error');
-        }
-      }
-  });
-
+  // userId = getTokenAndUserId().userId;
   logoutButton.addEventListener('click', async () => {
+    // const userId = getTokenAndUserId().userId;
 
     if (checkLoginStatus()) {
       const user = await getUser(userId);
@@ -301,18 +220,9 @@ function setupDOMElements() {
     }
   });
 
-  // 会員情報削除のボタンを押したとき
   deleteButton.addEventListener('click', async (event) => {
     event.preventDefault();
     if (checkLoginStatus()) {
-      modalArea.className = 'modalBg fadeIn';
-      userInfoArea.classList.add('noDisp');
-      const result = await createDeleteConfirmForm();
-      // resultがtrueなら削除実行
-      if (!result) {
-        userInfoArea.classList.remove('noDisp');
-        return;
-      }
       try {
         const data = await deleteUser();
         if (data && data.result) { // ユーザー削除成功
@@ -360,7 +270,7 @@ function setupDOMElements() {
     if (checkLoginStatus()) {
       if (userInfoArea.classList.contains('noDisp')) {
         userInfoButton.classList.add('noDisp');
-        userInfoArea.className = 'fadeIn';
+        userInfoArea.className = 'fadeIn user-info';
         modalArea.className = 'modalBg fadeIn';
       }
     } else {
@@ -373,18 +283,17 @@ function setupDOMElements() {
   });
   // ユーザー情報を閉じるボタン
   userInfoClose.addEventListener('click', function () {
-    if (!userInfoArea.classList.contains('noDisp')) {
-      userInfoArea.className = 'fadeOut noDisp';
+    if (userInfoArea.classList.contains('user-info')) {
+      userInfoArea.className = 'fadeOut user-info noDisp';
       modalArea.className = 'modalBg fadeOut';
       userInfoButton.classList.remove('noDisp');
     }
   });
 
+  // ユーザーIDから登録してあるコメントを取得し、コメント入力欄に反映
   if (userId) {
-    // ユーザーIDからユーザー情報を取得
     getUser(userId).then((user) => {
-      // コメントを反映
-      if (user.comment) {
+      if(user.comment) {
         const decodedComment = decodeHtmlEntities(user.comment)
         if (!decodedComment) {
           inputCommentArea.value = '';
@@ -392,10 +301,6 @@ function setupDOMElements() {
         } else {
           inputCommentArea.value = decodedComment;
         }
-      }
-      // ユーザー名を反映
-      if (user.username) {
-        userInfoName.value = user.username;
       }
     });
   }
@@ -547,7 +452,7 @@ function getRemainingTimeInMilliseconds(timer) {
 // 残り時間を分と秒に変換する関数
 function convertRemainingTime(remainingTimeInMilliseconds) {
   // 残り時間が0以下の場合は0を返す
-  if (remainingTimeInMilliseconds < 0) {
+  if(remainingTimeInMilliseconds < 0) {
     return { minutes: 0, seconds: 0, formattedSeconds: '00' };
   }
   // 残り時間を分と秒に変換
@@ -626,7 +531,7 @@ function updateTimerTable(minutes, seconds, timer, formattedSeconds) {
     // 行が存在しない場合は新規作成
     row = document.createElement("tr");
     row.setAttribute("data-username", decodedUsername);
-    row.classList.add('user-list');
+    row.classList.add('user-list'); 
 
     const usernameCell = document.createElement("td");
     usernameCell.textContent = decodedUsername;
@@ -637,7 +542,7 @@ function updateTimerTable(minutes, seconds, timer, formattedSeconds) {
     row.appendChild(timeCell);
 
     // コメントを表示するための新しい行とセルを作成
-    if (decodedComment !== '') {
+    if(decodedComment !== '') {
       additionalInfoRow = document.createElement("tr");
       additionalInfoRow.setAttribute("data-username", `${decodedUsername}-info`);
       additionalInfoRow.classList.add('timer-info');
@@ -649,7 +554,7 @@ function updateTimerTable(minutes, seconds, timer, formattedSeconds) {
 
     // 行をクリックしたときのイベントリスナーを設定
     row.addEventListener("click", () => {
-      if (additionalInfoRow) {
+      if(additionalInfoRow) {
         // コメントの行が非表示なら表示し、表示中なら非表示にする
         if (additionalInfoRow.classList.contains('is-open')) {
           row.classList.remove('is-open');
@@ -662,14 +567,14 @@ function updateTimerTable(minutes, seconds, timer, formattedSeconds) {
     });
 
     tableBody.appendChild(row);
-    if (additionalInfoRow) {
+    if(additionalInfoRow) {
       tableBody.appendChild(additionalInfoRow);
     }
 
     if (isMyTimer(timer, userId)) {
       myTimerArea.textContent = `${minutes}：${formattedSeconds}`;
       tableBody.insertBefore(row, tableBody.firstChild);
-      if (additionalInfoRow) {
+      if(additionalInfoRow) {
         tableBody.insertBefore(additionalInfoRow, row.nextSibling);
       }
       row.style.background = '#45fdf7b3';
@@ -696,7 +601,7 @@ function removeTimerFromTable(username) {
   if (row) {
     // 行が存在する場合は削除
     tableBody.removeChild(row);
-    if (additionalInfoRow) {
+    if(additionalInfoRow) {
       additionalInfoRow.remove();
     }
   }
@@ -711,8 +616,4 @@ function setButtonVisibility({ time, start, pause, resume, stop }) {
   stopButton.style.display = stop ? 'inline-block' : 'none';
 }
 
-
-
-
-
-export { timeInSeconds, userInfoName, messageArea, userInfoArea, userInfoButton, modalArea, setButtonVisibility, checkLoginStatus, isMyTimer, countdown, convertRemainingTime, updateTimerTable, setupDOMElements, setMessages, decodeHtmlEntities };
+export { timeInSeconds, messageArea, userInfoArea, userInfoButton, modalArea, setButtonVisibility, checkLoginStatus, isMyTimer, countdown, convertRemainingTime, updateTimerTable, setupDOMElements, setMessages, decodeHtmlEntities };

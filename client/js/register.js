@@ -5,37 +5,31 @@ export function createRegisterForm() {
   const formArea = document.getElementById("form-area");
 
   // フォームを作成
-  let registerForm = document.createElement("form");
+  var registerForm = document.createElement("form");
   registerForm.setAttribute("id", "register-form");
   registerForm.setAttribute("action", "process.env.APP_URL");
   registerForm.setAttribute("method", "POST");
 
   // ユーザー名入力フィールドを作成
-  let usernameInput = document.createElement("input");
+  var usernameInput = document.createElement("input");
   usernameInput.setAttribute("type", "text");
   usernameInput.setAttribute("name", "username");
   usernameInput.setAttribute("placeholder", "ユーザー名");
   registerForm.appendChild(usernameInput);
 
   // パスワード入力フィールドを作成
-  let passwordInput = document.createElement("input");
+  var passwordInput = document.createElement("input");
   passwordInput.setAttribute("type", "password");
   passwordInput.setAttribute("name", "password");
   passwordInput.setAttribute("placeholder", "パスワード");
   registerForm.appendChild(passwordInput);
-  
+
   // 登録ボタンを作成
-  let submitInput = document.createElement("input");
+  var submitInput = document.createElement("input");
   submitInput.setAttribute("type", "submit");
   submitInput.setAttribute("value", "登録");
   registerForm.appendChild(submitInput);
 
-  // 注意書きを作成
-  let caution = document.createElement("p");
-  caution.textContent = "※ユーザー名はアプリ内で公開されますので、個人情報は入力しないでください。";
-  caution.setAttribute("class", "register-caution");
-  registerForm.appendChild(caution);
-  
   // 作成したフォームを#form-areaの最後に追加
   formArea.appendChild(registerForm);
 

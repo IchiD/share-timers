@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
 
+// Socket.IOを初期化
 const io = new Server(server);
 
 
@@ -48,11 +49,7 @@ connectToDatabase();
 
 // ルートエンドポイントを設定
 app.get('/', (req, res) => {
-  try {
-    res.sendFile(path.join(__dirname, '/client/index.html'));
-  } catch (error) {
-    console.error(error);
-  }
+  res.sendFile(path.join(__dirname, '/client/index.html'));
 });
 
 
