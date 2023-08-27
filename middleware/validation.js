@@ -33,6 +33,21 @@ const registerValidation = [
 
 const loginValidation = registerValidation;
 
+const updateNameValidation = [
+  body('username')
+  .notEmpty()
+  .withMessage('ユーザー名を入力してください。')
+  .isLength({ min: 1, max: 10 })
+  .withMessage('ユーザー名は10文字以内で入力してください。')
+  .custom((value) => {
+    if (value.match(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/)) {
+      throw new Error('ユーザー名にURLは使用できません。');
+    }
+    return true;
+  })
+  .trim(),
+];
+
 const commentValidation = [
   body('comment')
   .isLength({ max: 25 })
@@ -69,4 +84,4 @@ const sendMailValidation = [
 
 
 
-export { loginValidation, registerValidation, commentValidation, sendMailValidation, handleErrors } ;
+export { loginValidation, registerValidation, updateNameValidation, commentValidation, sendMailValidation, handleErrors } ;

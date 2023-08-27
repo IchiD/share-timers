@@ -1,4 +1,4 @@
-import { setMessages, checkLoginStatus } from './index.js';
+import { setMessages, checkLoginStatus, userInfoName } from './index.js';
 
 const nameErrorMessageElement = document.querySelector('label[for="name"] .contact-error-message');
 const emailErrorMessageElement = document.querySelector('label[for="email"] .contact-error-message');
@@ -15,7 +15,7 @@ async function authenticateUser(url, username, password) {
       },
       body: JSON.stringify({ username, password }),
     });
-    if(!response.ok) {
+    if (!response.ok) {
       const { message } = await response.json();
       throw new Error(message);
     }
@@ -80,6 +80,51 @@ async function getUser(userId) {
   }
 }
 
+// ユーザー名を変更する
+async function updateName() {
+  try {
+    const { token, userId } = getTokenAndUserId();
+    const userInfo = await getUser(userId);
+    const usernameBefore = userInfo.name;
+    const usernameAfter = userInfoName.value.trim();
+    if (usernameAfter === "") {
+      const data = {};
+      data.message = 'ユーザー名を入力してください。';
+      return data;
+    }
+    if (usernameAfter === usernameBefore) {
+      const data = {};
+      data.status = 'notChanged';
+      return data;
+    }
+    if (usernameAfter.length > 10) {
+      const data = {};
+      data.message = 'ユーザー名は10文字以内で入力してください。';
+      return data;
+    }
+    if (usernameAfter.match(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/)) {
+      const data = {};
+      data.message = 'ユーザー名にURLは使用できません。';
+      return data;
+    }
+
+    const response = await fetch(`/api/users/updateName/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ username: usernameAfter })
+    });
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    setMessages('aサーバーに接続できませんでした。時間を置いてもう一度お試しください。', 'error');
+  }
+}
+
 // ユーザーのコメントを取得して変更がなかったら何もしない、変更があったら更新する。
 async function addComment() {
   try {
@@ -87,7 +132,7 @@ async function addComment() {
     const commentFormData = new FormData(document.getElementById('user-info-form'));
     const comment = commentFormData.get('comment');
 
-    if(comment.length > 25) {
+    if (comment.length > 25) {
       return setMessages('コメントは25文字以内で入力してください。', 'error');
     }
     if (comment.match(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/)) {
@@ -142,7 +187,7 @@ async function sendMail(name, email, message) {
       'Content-Type': 'application/json',
       'authorization': null,
     };
-    if(checkLoginStatus()) {
+    if (checkLoginStatus()) {
       userId = getTokenAndUserId().userId;
       token = getTokenAndUserId().token;
       headers['authorization'] = `Bearer ${token}`;
@@ -183,8 +228,4 @@ async function sendMail(name, email, message) {
   }
 };
 
-// function handleErrorMessageElement() {
-  
-// }
-
-export { getTokenAndUserId, authenticateUser, deleteUser, addComment, getUser, sendMail };
+export { getTokenAndUserId, authenticateUser, updateName, deleteUser, addComment, getUser, sendMail };
